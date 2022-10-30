@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  backend:
+    restart: always
+    image: aws-eks-app
+    build: .
+    ports:
+      - 3000:3000
+    command: npm run backend:start
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    env_file: .env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5.0.7
+    volumes:
+      - data-mongo:/data/db
+    env_file: .env
+
+  frontend:
+    restart: always
+    image: aws-eks-app
+    build: .
+    ports:
+      - 4000:4000
+    command: npm run frontend:start
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    env_file: .env
+
+volumes:
+  data-mongo:
+    driver: local
