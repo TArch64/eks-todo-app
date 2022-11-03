@@ -11,7 +11,7 @@ env:
 phases:
   pre_build:
     commands:
-      - docker login $CR_HOST -u $CR_USERNAME -p $CR_PASSWORD
+      - docker login -u $CR_USERNAME -p $CR_PASSWORD $CR_HOST
 
       - export DOCKER_BUILDKIT=1
       - export BUILDKIT_INLINE_CACHE=1
