@@ -1,0 +1,48 @@
+version: 0.2
+
+env:
+  variables:
+    CR_HOST: "ghcr.io"
+
+  parameter-store:
+    CR_USER: "/eks-todo-app/cr-user"
+    CR_PASSWORD: "/eks-todo-app/cr-password"
+
+phases:
+  pre_build:
+    commands:
+      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+
+      - export DOCKER_BUILDKIT=1
+      - export BUILDKIT_INLINE_CACHE=1
+
+      - export CR_BASE="$CR_HOST/$CR_USERNAME"
+
+      - docker pull $CR_BASE/eks-todo-app-backend || true
+      - docker pull $CR_BASE/eks-todo-app-nginx || true
+
+  build:
+    commands:
+      - >-
+        docker build
+          --tag eks-app-backend
+          --file ci/dockerfiles/backend.Dockerfile
+          --cache-from $CR_BASE/eks-todo-app-backend
+          --build-arg BUILDKIT_INLINE_CACHE
+          .
+
+      - >-
+        docker build
+          --tag eks-app-nginx
+          --file ci/dockerfiles/backend.Dockerfile
+          --cache-from $CR_BASE/eks-todo-app-nginx
+          --build-arg BUILDKIT_INLINE_CACHE
+          .
+
+  post_build:
+    commands:
+      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend
+      - docker push $CR_BASE/eks-todo-app-backend
+
+      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx
+      - docker push $CR_BASE/eks-todo-app-nginx

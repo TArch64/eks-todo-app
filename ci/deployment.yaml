@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-todo-app-deployment
+  namespace: eks-todo-app
+  labels:
+    app: eks-todo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eks-todo-app
+  template:
+    metadata:
+      labels:
+        app: eks-todo-app
+      spec:
+        containers:
+        - name: app
+          image: nginx

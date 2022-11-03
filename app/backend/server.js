@@ -20,5 +20,5 @@ for (const router of routers) {
 }
 
 app.listen(3000, '0.0.0.0', () => {
-    console.log(`Started at http://0.0.0.0:6000`)
+    console.log(`Started at http://0.0.0.0:3000`)
 });

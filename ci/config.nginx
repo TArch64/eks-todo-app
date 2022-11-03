@@ -1,0 +1,27 @@
+server {
+    listen 80 default_server;
+    access_log off;
+    autoindex off;
+    client_max_body_size 100M;
+    charset utf-8;
+    root /app;
+
+    location /api/ {
+        proxy_pass $API_HOST/;
+    }
+
+    location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        gzip_static on;
+        try_files $uri $uri/;
+    }
+
+    location / {
+        try_files $uri $uri/index.html @home;
+    }
+
+    location @home {
+        return 301 /;
+    }
+}
