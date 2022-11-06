@@ -18,7 +18,7 @@ phases:
       - export DOCKER_BUILDKIT=1
       - export BUILDKIT_INLINE_CACHE=1
 
-      - export CR_BASE="$CR_HOST/$CR_USERNAME"
+      - export CR_BASE="$CR_HOST/$CR_USER"
 
       - docker pull $CR_BASE/eks-todo-app-backend || true
       - docker pull $CR_BASE/eks-todo-app-nginx || true
