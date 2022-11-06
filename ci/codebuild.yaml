@@ -11,6 +11,9 @@ env:
 phases:
   pre_build:
     commands:
+      - export TEST="-u $CR_USERNAME -p $CR_PASSWORD $CR_HOST"
+      - echo "$TEST"
+
       - docker login -u "$CR_USERNAME" -p "$CR_PASSWORD" "$CR_HOST"
 
       - export DOCKER_BUILDKIT=1
