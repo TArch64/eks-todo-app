@@ -10,7 +10,7 @@ phases:
       - >-
         eval $( \
           aws ssm get-parameters-by-path --path '/eks-todo-app' --no-paginate --with-decryption \
-          echo $ssm_json | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
+          | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
         )
 
       - echo "$CR_PASSWORD | docker login $CR_HOST --username $CR_USERNAME --password-stdin"
