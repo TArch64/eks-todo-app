@@ -11,8 +11,8 @@ env:
 phases:
   pre_build:
     commands:
-      - export CR_USERNAME=$(aws ssm get-parameter --name /eks-todo-app/cr-user --query 'Parameter.Value')
-      - export CR_PASSWORD=$(aws ssm get-parameter --name /eks-todo-app/cr-password --with-decryption --query 'Parameter.Value')
+      - export CR_USERNAME=$(aws ssm get-parameter --name /eks-todo-app/cr-user --output text --query 'Parameter.Value')
+      - export CR_PASSWORD=$(aws ssm get-parameter --name /eks-todo-app/cr-password --output text --with-decryption --query 'Parameter.Value')
       - echo "$CR_PASSWORD" | docker login "$CR_HOST" --username "$CR_USERNAME" --password-stdin
 
       - export DOCKER_BUILDKIT=1
