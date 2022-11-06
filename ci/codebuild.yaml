@@ -13,8 +13,7 @@ phases:
           | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
         )
 
-      - echo "$CR_PASSWORD | docker login $CR_HOST --username $CR_USERNAME --password-stdin"
-      - echo "$CR_PASSWORD" | docker login "$CR_HOST" --username "$CR_USERNAME" --password-stdin
+      - echo "$CR_PASSWORD" | docker login "$CR_HOST" --username "$CR_USER" --password-stdin
 
       - export DOCKER_BUILDKIT=1
       - export BUILDKIT_INLINE_CACHE=1
