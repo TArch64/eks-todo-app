@@ -8,10 +8,12 @@ phases:
   pre_build:
     commands:
       - >-
-        ssm_json=$(aws ssm get-parameters-by-path --path '/eks-todo-app' --no-paginate --with-decryption);
-        ssm_vars=$(echo $ssm_json | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value')
-        export $(echo $ssm_vars);
+        eval $( \
+          aws ssm get-parameters-by-path --path '/eks-todo-app' --no-paginate --with-decryption \
+          echo $ssm_json | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
+        )
 
+      - echo "$CR_PASSWORD | docker login $CR_HOST --username $CR_USERNAME --password-stdin"
       - echo "$CR_PASSWORD" | docker login "$CR_HOST" --username "$CR_USERNAME" --password-stdin
 
       - export DOCKER_BUILDKIT=1
