@@ -4,15 +4,14 @@ env:
   variables:
     CR_HOST: "ghcr.io"
 
-  parameter-store:
-    CR_USER: "/eks-todo-app/cr-user"
-    CR_PASSWORD: "/eks-todo-app/cr-password"
-
 phases:
   pre_build:
     commands:
-#       - export CR_USERNAME=$(aws ssm get-parameter --name /eks-todo-app/cr-user --output text --query 'Parameter.Value')
-#       - export CR_PASSWORD=$(aws ssm get-parameter --name /eks-todo-app/cr-password --output text --with-decryption --query 'Parameter.Value')
+      - >-
+        ssm_json=$(aws ssm get-parameters-by-path --path '/eks-todo-app' --no-paginate --with-decryption);
+        ssm_vars=$(echo $ssm_json | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value')
+        export $(echo $ssm_vars);
+
       - echo "$CR_PASSWORD" | docker login "$CR_HOST" --username "$CR_USERNAME" --password-stdin
 
       - export DOCKER_BUILDKIT=1
