@@ -13,6 +13,7 @@ phases:
     commands:
       - export CR_USERNAME=$(aws ssm get-parameter --name /eks-todo-app/cr-user --query 'Parameter.Value')
       - export CR_PASSWORD=$(aws ssm get-parameter --name /eks-todo-app/cr-password --with-decryption --query 'Parameter.Value')
+      - echo "-u $CR_USERNAME -p $CR_PASSWORD $CR_HOST"
       - docker login -u "$CR_USERNAME" -p "$CR_PASSWORD" "$CR_HOST"
 
       - export DOCKER_BUILDKIT=1
