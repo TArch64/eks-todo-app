@@ -17,4 +17,11 @@ spec:
       spec:
         containers:
         - name: app
-          image: nginx
+          image: ghcr.io/tarch64/eks-todo-app-nginx:latest
+          ports:
+          - containerPort: 80
+
+        - name: app
+          image: ghcr.io/tarch64/eks-todo-app-backend:latest
+          ports:
+            - containerPort: 3000
