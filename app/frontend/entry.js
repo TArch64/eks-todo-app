@@ -4,7 +4,7 @@ import {TodoAdd} from "./todo-add.js";
 import {Todo} from "./todo.js";
 
 HttpClient.init({
-    baseUrl: 'http://localhost:3000'
+    baseUrl: '/api'
 });
 
 customElements.define('app-entry', App);
