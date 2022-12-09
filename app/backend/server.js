@@ -15,6 +15,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use((req, res, next) => {
+    console.log('Process: ', req.url);
+    next();
+})
+
 for (const router of routers) {
     app.use(router.basePath, router.middleware)
 }
