@@ -36,7 +36,7 @@ phases:
       - >-
         docker build \
           --tag eks-app-nginx \
-          --file ci/dockerfiles/backend.Dockerfile \
+          --file ci/dockerfiles/nginx.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-nginx \
           --build-arg BUILDKIT_INLINE_CACHE \
           .
