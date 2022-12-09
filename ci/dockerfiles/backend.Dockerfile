@@ -7,3 +7,5 @@ COPY ./package.json ./package-lock.json ./
 RUN npm ci --production
 
 COPY ./app/backend ./app/backend
+
+CMD ["node", "app/backend/server"]
