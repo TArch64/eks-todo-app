@@ -8,7 +8,6 @@ server {
     autoindex off;
     client_max_body_size 100M;
     charset utf-8;
-    root /app;
 
     location /api/ {
         proxy_pass http://backend-app/;
@@ -22,6 +21,7 @@ server {
     }
 
     location / {
+        root /app/app/;
         try_files $uri $uri/index.html @home;
     }
 
