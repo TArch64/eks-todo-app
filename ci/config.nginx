@@ -4,7 +4,6 @@ server {
     autoindex off;
     client_max_body_size 100M;
     charset utf-8;
-    root /app/app/;
 
     location /api/ {
         proxy_pass http://backend:3000/;
@@ -14,10 +13,12 @@ server {
         add_header Pragma public;
         add_header Cache-Control "public";
         gzip_static on;
+        root /app/app/frontend;
         try_files $uri $uri/;
     }
 
     location / {
+        root /app/app/frontend;
         try_files $uri $uri/index.html @not-found;
     }
 
