@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: nginx
+          image: ghcr.io/tarch64/eks-todo-app-nginx:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: API_HOST
+              value: http://localhost/api
+
