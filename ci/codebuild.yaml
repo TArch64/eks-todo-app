@@ -20,13 +20,14 @@ phases:
 
       - export CR_BASE="$CR_HOST/$CR_USER"
 
-      - docker pull $CR_BASE/eks-todo-app-backend || true
-      - docker pull $CR_BASE/eks-todo-app-nginx || true
+      - docker pull $CR_BASE/eks-todo-app-backend:latest || true
+      - docker pull $CR_BASE/eks-todo-app-nginx:latest || true
 
   build:
     commands:
       - >-
-        docker build \
+        docker buildx \
+          --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
           --tag eks-app-backend \
           --file ci/dockerfiles/backend.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-backend \
@@ -34,7 +35,8 @@ phases:
           .
 
       - >-
-        docker build \
+        docker buildx \
+          --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
           --tag eks-app-nginx \
           --file ci/dockerfiles/nginx.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-nginx \
@@ -43,8 +45,10 @@ phases:
 
   post_build:
     commands:
-      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend
-      - docker push $CR_BASE/eks-todo-app-backend
+      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend:latest
+      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend:$CODEBUILD_BUILD_NUMBER
+      - docker push $CR_BASE/eks-todo-app-backend -a
 
-      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx
-      - docker push $CR_BASE/eks-todo-app-nginx
+      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx:latest
+      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx:$CODEBUILD_BUILD_NUMBER
+      - docker push $CR_BASE/eks-todo-app-nginx -a
