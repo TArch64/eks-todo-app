@@ -25,3 +25,4 @@ spec:
               value: admin
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: admin
+          imagePullPolicy: IfNotPresent
