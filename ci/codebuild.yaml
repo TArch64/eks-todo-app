@@ -35,7 +35,7 @@ phases:
     commands:
       - >-
         docker buildx build \
-          --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
+          --platform linux/amd64,linux/arm64 \
           --tag $CR_BASE/eks-todo-app-backend:latest \
           --tag $CR_BASE/eks-todo-app-backend:$CODEBUILD_BUILD_NUMBER \
           --file ci/dockerfiles/backend.Dockerfile \
@@ -45,7 +45,7 @@ phases:
 
       - >-
         docker buildx build \
-          --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
+          --platform linux/amd64,linux/arm64 \
           --tag $CR_BASE/eks-todo-app-nginx:latest \
           --tag $CR_BASE/eks-todo-app-nginx:$CODEBUILD_BUILD_NUMBER \
           --file ci/dockerfiles/nginx.Dockerfile \
