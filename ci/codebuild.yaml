@@ -7,6 +7,13 @@ env:
 phases:
   pre_build:
     commands:
+      - docker version
+      - curl -JLO https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64
+      - mkdir -p ~/.docker/cli-plugins
+      - mv buildx-v0.4.2.linux-amd64 ~/.docker/cli-plugins/docker-buildx
+      - chmod a+rx ~/.docker/cli-plugins/docker-buildx
+      - docker run --privileged --rm tonistiigi/binfmt --install all
+
       - >-
         eval $( \
           aws ssm get-parameters-by-path --path '/eks-todo-app' --no-paginate --with-decryption \
@@ -28,7 +35,8 @@ phases:
       - >-
         docker buildx build \
           --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
-          --tag eks-app-backend \
+          --tag $CR_BASE/eks-todo-app-backend:latest \
+          --tag $CR_BASE/eks-todo-app-backend:$CODEBUILD_BUILD_NUMBER \
           --file ci/dockerfiles/backend.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-backend \
           --build-arg BUILDKIT_INLINE_CACHE \
@@ -37,7 +45,8 @@ phases:
       - >-
         docker buildx build \
           --platform linux/amd64,linux/arm64,darwin/amd64,darwin/arm64 \
-          --tag eks-app-nginx \
+          --tag $CR_BASE/eks-todo-app-nginx:latest \
+          --tag $CR_BASE/eks-todo-app-nginx:$CODEBUILD_BUILD_NUMBER \
           --file ci/dockerfiles/nginx.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-nginx \
           --build-arg BUILDKIT_INLINE_CACHE \
