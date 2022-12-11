@@ -41,6 +41,7 @@ phases:
           --file ci/dockerfiles/backend.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-backend \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --push \
           .
 
       - >-
@@ -51,14 +52,5 @@ phases:
           --file ci/dockerfiles/nginx.Dockerfile \
           --cache-from $CR_BASE/eks-todo-app-nginx \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --push \
           .
-
-  post_build:
-    commands:
-      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend:latest
-      - docker tag eks-app-backend $CR_BASE/eks-todo-app-backend:$CODEBUILD_BUILD_NUMBER
-      - docker push $CR_BASE/eks-todo-app-backend -a
-
-      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx:latest
-      - docker tag eks-app-nginx $CR_BASE/eks-todo-app-nginx:$CODEBUILD_BUILD_NUMBER
-      - docker push $CR_BASE/eks-todo-app-nginx -a
