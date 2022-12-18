@@ -15,12 +15,11 @@ spec:
         app: nginx
     spec:
       restartPolicy: Always
+      nodeSelector:
+        instance: app
       containers:
         - name: nginx
           image: ghcr.io/tarch64/eks-todo-app-nginx:latest
           ports:
             - containerPort: 80
-          env:
-            - name: API_HOST
-              value: http://localhost/api
           imagePullPolicy: Always
