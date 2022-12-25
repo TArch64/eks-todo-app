@@ -4,8 +4,11 @@ metadata:
   name: nginx
   labels:
     app: nginx
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-015bfa6682254c172
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - port: 80
       targetPort: 80

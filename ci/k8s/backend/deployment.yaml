@@ -4,10 +4,15 @@ metadata:
   name: backend
   labels:
     app: backend
+    instance: app
 spec:
   selector:
     matchLabels:
       app: backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   replicas: 1
   template:
     metadata:
@@ -15,8 +20,13 @@ spec:
         app: backend
     spec:
       restartPolicy: Always
-      nodeSelector:
-        instance: app
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/node
+              labelSelector:
+                matchLabels:
+                  instance: app
       containers:
         - name: backend
           image: ghcr.io/tarch64/eks-todo-app-backend:latest

@@ -4,10 +4,15 @@ metadata:
   name: mongo
   labels:
     app: mongo
+    instance: mongo
 spec:
   selector:
     matchLabels:
       app: mongo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   replicas: 1
   template:
     metadata:
@@ -15,8 +20,13 @@ spec:
         app: mongo
     spec:
       restartPolicy: Always
-      nodeSelector:
-        instance: mongo
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/node
+              labelSelector:
+                matchLabels:
+                  instance: mongo
       containers:
         - name: mongo
           image: mongo:5.0.7

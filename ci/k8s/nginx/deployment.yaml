@@ -4,10 +4,15 @@ metadata:
   name: nginx
   labels:
     app: nginx
+    instance: app
 spec:
   selector:
     matchLabels:
       app: nginx
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   replicas: 1
   template:
     metadata:
@@ -15,8 +20,13 @@ spec:
         app: nginx
     spec:
       restartPolicy: Always
-      nodeSelector:
-        instance: app
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/node
+              labelSelector:
+                matchLabels:
+                  instance: app
       containers:
         - name: nginx
           image: ghcr.io/tarch64/eks-todo-app-nginx:latest

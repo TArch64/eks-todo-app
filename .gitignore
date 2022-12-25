@@ -2,3 +2,4 @@ node_modules
 .idea
 .fleet
 .aws-credentials
+ci/eks-todo-app.pem
